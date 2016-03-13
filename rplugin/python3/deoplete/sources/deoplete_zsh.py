@@ -21,11 +21,15 @@ class Source(Base):
 
     def gather_candidates(self, context):
         # Get current first letter input and caching
-        f_input = context['input'][2]
-        if self.candidates[f_input] is not None:
-            return self.candidates[f_input]
+        if context['input'][0] and context['input'][0] in string.ascii_lowercase:
+            f_input = context['input'][0]
+
+            if self.candidates[f_input]:
+                return self.candidates[f_input]
+            elif f_input in string.ascii_lowercase:
+                self.candidates[f_input] = \
+                        self.vim.call('zsh_completion#Complete', 0, 0)
+                return self.candidates[f_input]
 
         else:
-            self.candidates[f_input] = \
-                self.vim.call('zsh_completion#Complete', 0, 0)
-            return self.candidates[f_input]
+            return []

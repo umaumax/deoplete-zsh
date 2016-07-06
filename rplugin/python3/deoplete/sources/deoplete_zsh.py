@@ -1,6 +1,6 @@
 import string
 
-from deoplete.sources.base import Base
+from .base import Base
 
 
 class Source(Base):

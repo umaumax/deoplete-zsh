@@ -1,7 +1,6 @@
 # deoplete-zsh
 
-Zsh completion for deoplete.nvim  
-Currently, my hobby project.
+Zsh completion for deoplete.nvim
 
 ## Required
 
@@ -17,9 +16,7 @@ zmodload zsh/zpty
 ```
 
 ## TODO
-- [ ] Use omnifunc. Not asynchronous
-  - [ ] Usu subprocess.Popen?
-- [ ] Directly call the zsh tab completion from python
 
 ## Original code
-[github.com/Valodim/vim-zsh-completion](https://github.com/Valodim/vim-zsh-completion)
+
+It includes [zsh-capture-completion](https://github.com/Valodim/zsh-capture-completion)

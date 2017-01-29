@@ -1,5 +1,7 @@
-import string
+import re
+import subprocess
 
+from deoplete.util import globruntime
 from .base import Base
 
 
@@ -13,23 +15,29 @@ class Source(Base):
         self.filetypes = ['zsh']
         self.input_pattern = '[^. \t0-9]\.\w*'
         self.rank = 500
-
-        self.candidates = dict.fromkeys(string.ascii_lowercase, None)
+        self.__executable_zsh = self.vim.call('executable', 'zsh')
 
     def get_complete_position(self, context):
-        return self.vim.call('zsh_completion#Complete', 1, 0)
+        m = re.search(r'\S+$', context['input'])
+        if not m:
+            return -1
+        return m.start()
 
     def gather_candidates(self, context):
-        # Get current first letter input and caching
-        if context['input'][0] and context['input'][0] in string.ascii_lowercase:
-            f_input = context['input'][0]
-
-            if self.candidates[f_input]:
-                return self.candidates[f_input]
-            elif f_input in string.ascii_lowercase:
-                self.candidates[f_input] = \
-                        self.vim.call('zsh_completion#Complete', 0, 0)
-                return self.candidates[f_input]
-
-        else:
+        capture = globruntime(context['runtimepath'], 'bin/capture.zsh')
+        if not self.__executable_zsh or not capture or not context['input']:
             return []
+
+        result = []
+        try:
+            for pieces in [x.decode(context['encoding']).split(' -- ')
+                           for x in subprocess.check_output(
+                                   ['zsh', capture[0], context['input']]
+                                   , timeout=0.5).splitlines()]:
+                if len(pieces) > 1:
+                    result.append({ 'word': pieces[0], 'menu': pieces[1] })
+                else:
+                    result.append({ 'word': pieces[0] })
+        except subprocess.CalledProcessError:
+            return []
+        return result

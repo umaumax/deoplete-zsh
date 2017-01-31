@@ -38,6 +38,6 @@ class Source(Base):
                     result.append({ 'word': pieces[0], 'menu': pieces[1] })
                 else:
                     result.append({ 'word': pieces[0] })
-        except subprocess.CalledProcessError:
+        except subprocess.SubprocessError:
             return []
         return result

@@ -23,7 +23,7 @@ PROMPT=
 
 # load completion system
 autoload compinit
-compinit -d ~/.zcompdump_capture
+compinit -d ${DEOPLETE_ZSH_CACHE_DIR:-"${XDG_CACHE_HOME:-"$HOME/.cache"}/deoplete/zsh"}/compdump
 
 # never run a command
 bindkey ''^M'' undefined

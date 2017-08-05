@@ -18,12 +18,16 @@ setopt rcquotes
     echo 'error initializing.' >&2
     exit 2
 } =( <<< '
+typeset -gx DEOPLETE_ZSH_CACHE_DIR=${DEOPLETE_ZSH_CACHE_DIR:-"${XDG_CACHE_HOME:-"$HOME/.cache"}/deoplete/zsh"}
+
+mkdir -p "$DEOPLETE_ZSH_CACHE_DIR"
+
 # no prompt!
 PROMPT=
 
 # load completion system
 autoload compinit
-compinit -d ${DEOPLETE_ZSH_CACHE_DIR:-"${XDG_CACHE_HOME:-"$HOME/.cache"}/deoplete/zsh"}/compdump
+compinit -d "$DEOPLETE_ZSH_CACHE_DIR/compdump"
 
 # never run a command
 bindkey ''^M'' undefined
